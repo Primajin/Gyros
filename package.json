@@ -1,0 +1,35 @@
+{
+  "name": "gyros",
+  "version": "1.0.0",
+  "description": "A JavaScript library for creating shiny effects on HTML elements using gyroscope or mouse movement.",
+  "main": "dist/gyros.umd.js",
+  "module": "dist/gyros.es.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Primajin/Gyros.git"
+  },
+  "keywords": [
+    "shiny",
+    "effect",
+    "gradient",
+    "gyroscope",
+    "interactive"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Primajin/Gyros/issues"
+  },
+  "homepage": "https://github.com/Primajin/Gyros#readme",
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
