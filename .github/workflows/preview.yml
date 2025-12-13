@@ -22,8 +22,9 @@ jobs:
         run: |
           npm install
           npm run build:preview
+          touch dist/.nojekyll
 
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1
         with:
-          source-dir: ./dist/
+          source-dir: ./dist
