@@ -22,6 +22,8 @@ jobs:
         run: |
           npm install
           npm run build:preview
+        env:
+          VITE_BASE_PATH: /Gyros/pr-preview/pr-${{ github.event.number }}/
 
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1
