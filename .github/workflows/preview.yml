@@ -8,6 +8,10 @@ on:
       - synchronize
       - closed
 
+permissions:
+  contents: write
+  pull-requests: write
+
 concurrency: preview-${{ github.ref }}
 
 jobs:
@@ -27,5 +31,6 @@ jobs:
 
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1
+        if: github.event.pull_request.head.repo.full_name == github.repository
         with:
           source-dir: ./dist/
