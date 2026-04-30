@@ -6,7 +6,7 @@ export default defineConfig({
 		lib: {
 			entry: fileURLToPath(new URL('src/main.js', import.meta.url)),
 			name: 'Gyros',
-			fileName: format => `gyros.${format}.js`,
+			fileName: format => format === 'umd' ? `gyros.${format}.cjs` : `gyros.${format}.js`,
 		},
 	},
 });
