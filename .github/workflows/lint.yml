@@ -6,7 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
-permissions: write-all
+permissions:
+  contents: write
+  pull-requests: write
+  checks: write
 
 jobs:
   lint:

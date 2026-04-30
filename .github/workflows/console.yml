@@ -4,7 +4,10 @@ on:
   pull_request:
     types: [ opened, synchronize, reopened ]
 
-permissions: write-all
+permissions:
+  checks: read
+  contents: read
+  pull-requests: write
 
 jobs:
   console:

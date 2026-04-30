@@ -1,12 +1,12 @@
-import { resolve } from 'path';
-import { defineConfig } from 'vite';
+import {fileURLToPath} from 'node:url';
+import {defineConfig} from 'vite';
 
 export default defineConfig({
-  build: {
-    lib: {
-      entry: resolve(__dirname, 'src/main.js'),
-      name: 'Gyros',
-      fileName: (format) => `gyros.${format}.js`,
-    },
-  },
+	build: {
+		lib: {
+			entry: fileURLToPath(new URL('src/main.js', import.meta.url)),
+			name: 'Gyros',
+			fileName: format => format === 'umd' ? `gyros.${format}.cjs` : `gyros.${format}.js`,
+		},
+	},
 });

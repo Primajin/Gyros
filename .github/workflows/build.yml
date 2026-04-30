@@ -8,7 +8,9 @@ on:
       - synchronize
       - closed
 
-permissions: write-all
+permissions:
+  contents: write
+  pull-requests: write
 
 concurrency: preview-${{ github.ref }}
 
@@ -38,5 +40,6 @@ jobs:
           VITE_BASE_PATH: "/Gyros/pr-preview/pr-${{ github.event.pull_request.number }}/"
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1
+        if: github.event.pull_request.head.repo.full_name == github.repository
         with:
           source-dir: ./dist/
