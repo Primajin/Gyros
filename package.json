@@ -11,7 +11,8 @@
     "start": "vite",
     "build": "vite build --config vite.config.lib.js",
     "build:preview": "vite build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,9 @@
   },
   "homepage": "https://github.com/Primajin/Gyros#readme",
   "devDependencies": {
-    "vite": "^5.0.0"
+    "@vitest/coverage-v8": "^4.1.5",
+    "jsdom": "^29.1.0",
+    "vite": "^5.0.0",
+    "vitest": "^4.1.5"
   }
 }
