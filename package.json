@@ -4,15 +4,19 @@
   "description": "A JavaScript library for creating shiny effects on HTML elements using gyroscope or mouse movement.",
   "main": "dist/gyros.umd.js",
   "module": "dist/gyros.es.js",
+  "type": "module",
   "files": [
     "dist"
   ],
   "scripts": {
-    "start": "vite",
     "build": "vite build --config vite.config.lib.js",
     "build:preview": "vite build",
-    "test": "vitest run",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "lint": "xo --config eslint.config.js",
+    "lint:fix": "npm run lint -- --fix",
+    "lint:watch": "npx nodemon -x npm run lint:fix --ext js,jsx,json",
+    "start": "vite",
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -25,7 +29,9 @@
     "gyroscope",
     "interactive"
   ],
-  "author": "",
+  "author": {
+    "name": "Jannis Hell"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Primajin/Gyros/issues"
@@ -33,8 +39,12 @@
   "homepage": "https://github.com/Primajin/Gyros#readme",
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.5",
-    "jsdom": "^29.1.0",
-    "vite": "^5.0.0",
-    "vitest": "^4.1.5"
+    "@vitest/eslint-plugin": "^1.6.16",
+    "eslint": "^10.2.1",
+    "globals": "^17.5.0",
+    "jsdom": "^29.1.1",
+    "vite": "^8.0.10",
+    "vitest": "^4.1.5",
+    "xo": "^2.0.2"
   }
 }

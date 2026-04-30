@@ -1,4 +1,7 @@
-import {describe, it, expect, beforeEach, vi} from 'vitest';
+import {
+	describe, it, expect, beforeEach, vi,
+} from 'vitest';
+
 import Gyros from './main.js';
 
 describe('Gyros', () => {
