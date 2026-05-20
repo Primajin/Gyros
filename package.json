@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/Primajin/Gyros#readme",
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.6",
+    "@vitest/coverage-v8": "^4.1.7",
     "@vitest/eslint-plugin": "^1.6.17",
     "eslint": "^10.2.1",
     "globals": "^17.6.0",
