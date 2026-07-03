@@ -10,7 +10,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
   pull-requests: write
 
 # Use a single shared concurrency group so all runs that write to gh-pages are
@@ -48,26 +47,9 @@ jobs:
         env:
           VITE_BASE_PATH: /Gyros/pr-preview/pr-${{ github.event.number }}/
 
-      - name: Configure GitHub Pages for branch deployment
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo '{"build_type":"legacy","source":{"branch":"gh-pages","path":"/"}}' | \
-          gh api repos/${{ github.repository }}/pages \
-            --method PATCH \
-            --input - \
-            || true
-
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1
         id: preview
         if: github.event.pull_request.head.repo.full_name == github.repository
         with:
           source-dir: ./dist/
-
-      - name: Trigger GitHub Pages build
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh api repos/${{ github.repository }}/pages/builds --method POST || true
