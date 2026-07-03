@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 # Use a single shared concurrency group so all runs that write to gh-pages are
 # serialised. A per-ref group still allows concurrent writes from different
@@ -19,6 +20,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy the latest main version to GitHub Pages.
+    environment:
+      name: github-pages
+      url: https://primajin.github.io/Gyros/
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -39,8 +43,18 @@ jobs:
         run: npm run build:preview
         env:
           VITE_BASE_PATH: "/Gyros/"
+      - name: Configure GitHub Pages for branch deployment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo '{"build_type":"legacy","source":{"branch":"gh-pages","path":"/"}}' | \
+          gh api repos/${{ github.repository }}/pages \
+            --method PATCH \
+            --input - \
+            || true
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist
+          clean-exclude: pr-preview
           retry_on_conflict: true
