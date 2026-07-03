@@ -6,12 +6,12 @@ on:
       - main
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
+# Serialise with the PR preview workflow so main deploys and preview
+# deploys never race to push to the gh-pages branch at the same time.
 concurrency:
-  group: "pages"
+  group: gh-pages
   cancel-in-progress: false
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: https://primajin.github.io/Gyros/
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -27,24 +27,21 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build demo
         run: npm run build:preview
         env:
           VITE_BASE_PATH: /Gyros/
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v6
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: './dist'
-
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          # Preserve PR preview subdirectories so a main-branch push
+          # does not wipe out deployed previews from open PRs.
+          clean-exclude: pr-preview
