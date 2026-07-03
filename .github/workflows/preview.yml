@@ -25,6 +25,9 @@ concurrency:
 jobs:
   deploy-preview:
     runs-on: ubuntu-latest
+    environment:
+      name: pr-preview/pr-${{ github.event.number }}
+      url: ${{ format('https://{0}.github.io/{1}/pr-preview/pr-{2}/', github.repository_owner, github.event.repository.name, github.event.number) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -39,6 +42,7 @@ jobs:
 
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1
+        id: preview
         if: github.event.pull_request.head.repo.full_name == github.repository
         with:
           source-dir: ./dist/
