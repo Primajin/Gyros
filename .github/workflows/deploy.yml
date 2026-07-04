@@ -55,7 +55,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          python - <<'PY'
+          python3 - <<'PY'
           import json
           import os
           import sys
@@ -73,7 +73,7 @@ jobs:
           if not expected_sha:
               raise SystemExit('EXPECTED_PAGES_SHA is empty')
 
-          def request(method, url):
+          def request(method, url, *, expect_json=True):
               req = urllib.request.Request(
                   url,
                   method=method,
@@ -83,8 +83,11 @@ jobs:
                       'X-GitHub-Api-Version': '2022-11-28',
                   },
               )
-              with urllib.request.urlopen(req) as response:
-                  return json.load(response)
+              with urllib.request.urlopen(req, timeout=15) as response:
+                  if not expect_json:
+                      return None
+                  body = response.read()
+                  return json.loads(body or '{}')
 
           while time.time() < deadline:
               data = request(
@@ -119,7 +122,11 @@ jobs:
 
               if retries_done < max_reruns and attempt > last_retried_attempt:
                   print(f'Re-running failed Pages workflow run {run_id}...')
-                  request('POST', f'https://api.github.com/repos/{repository}/actions/runs/{run_id}/rerun')
+                  request(
+                      'POST',
+                      f'https://api.github.com/repos/{repository}/actions/runs/{run_id}/rerun',
+                      expect_json=False,
+                  )
                   retries_done += 1
                   last_retried_attempt = attempt
                   time.sleep(10)
