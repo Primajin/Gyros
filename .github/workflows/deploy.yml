@@ -19,6 +19,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy the latest main version to GitHub Pages.
+    environment:
+      name: github-pages
+      url: https://primajin.github.io/Gyros/
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -43,4 +46,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist
+          clean-exclude: pr-preview
           retry_on_conflict: true
