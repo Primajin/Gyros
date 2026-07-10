@@ -4,6 +4,7 @@
 
 This project uses [Conventional Commits](https://www.conventionalcommits.org/). Every commit message and PR title must follow the format:
 
+```sh
 <type>[optional scope][optional !]: <description>
 ```
 
