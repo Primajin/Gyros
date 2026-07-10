@@ -1,4 +1,4 @@
-class Gyros {
+export default class Gyros {
 	constructor(selector, options) {
 		this.elements = globalThis.document.querySelectorAll(selector);
 		this.options = this.getOptions(options);
@@ -29,7 +29,7 @@ class Gyros {
 	}
 
 	async applyEffect() {
-		let gyroscopeUsed = false;
+		let isGyroscopeUsed = false;
 
 		if (globalThis.DeviceOrientationEvent && this.options.fallback.includes('gyroscope')) {
 			if (typeof globalThis.DeviceOrientationEvent.requestPermission === 'function') {
@@ -37,20 +37,20 @@ class Gyros {
 					const permissionState = await globalThis.DeviceOrientationEvent.requestPermission();
 					if (permissionState === 'granted') {
 						globalThis.addEventListener('deviceorientation', this.handleOrientation.bind(this));
-						gyroscopeUsed = true;
+						isGyroscopeUsed = true;
 					}
 				} catch (error) {
 					console.error(error);
 				}
 			} else {
 				globalThis.addEventListener('deviceorientation', this.handleOrientation.bind(this));
-				gyroscopeUsed = true;
+				isGyroscopeUsed = true;
 			}
 		}
 
-		if (!gyroscopeUsed && this.options.fallback.includes('mouse')) {
+		if (!isGyroscopeUsed && this.options.fallback.includes('mouse')) {
 			globalThis.addEventListener('mousemove', this.handleMouseMove.bind(this));
-		} else if (!gyroscopeUsed) {
+		} else if (!isGyroscopeUsed) {
 			for (const element of this.elements) {
 				const gradient = this.getGradient();
 				element.style.backgroundImage = gradient;
@@ -114,5 +114,3 @@ class Gyros {
 		return `linear-gradient(${angle}deg, ${gradientStops})`;
 	}
 }
-
-export default Gyros;

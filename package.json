@@ -42,18 +42,14 @@
   },
   "homepage": "https://github.com/Primajin/Gyros#readme",
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.9",
-    "@vitest/eslint-plugin": "^1.6.20",
-    "eslint": "^10.2.1",
+    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/eslint-plugin": "^1.6.22",
+    "eslint": "^10.6.0",
     "globals": "^17.7.0",
     "jsdom": "^29.1.1",
     "nodemon": "^3.1.14",
-    "vite": "^8.1.3",
+    "vite": "^8.1.4",
     "vitest": "^4.1.5",
-    "xo": "^3.0.2"
-  },
-  "overrides": {
-    "eslint": "^10.2.1",
-    "eslint-plugin-unicorn": "^66.0.0"
+    "xo": "^4.0.0"
   }
 }
