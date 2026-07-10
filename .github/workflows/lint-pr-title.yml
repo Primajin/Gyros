@@ -22,6 +22,11 @@ jobs:
             const PR_NUMBER = context.payload.pull_request.number;
             const { owner, repo } = context.repo;
 
+            const isFork = context.payload.pull_request.head.repo.full_name !== context.payload.pull_request.base.repo.full_name;
+            if (isFork) {
+              core.info('PR is from a fork; skipping PR title sync because GITHUB_TOKEN cannot update fork PR titles.');
+              return;
+            }
             const PATCH = 0;
             const MINOR = 1;
             const MAJOR = 2;
