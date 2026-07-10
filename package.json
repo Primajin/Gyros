@@ -1,5 +1,5 @@
 {
-  "name": "gyros",
+  "name": "@primajin/gyros",
   "version": "1.0.0",
   "description": "A JavaScript library for creating shiny effects on HTML elements using gyroscope or mouse movement.",
   "main": "dist/gyros.umd.cjs",
