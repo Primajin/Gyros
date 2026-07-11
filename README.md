@@ -5,7 +5,7 @@ A JavaScript library for creating shiny effects on HTML elements using gyroscope
 ## Installation
 
 ```bash
-npm install gyros
+npm install @primajin/gyros
 ```
 
 ## Basic Usage
@@ -15,7 +15,7 @@ npm install gyros
 ```
 
 ```javascript
-import Gyros from 'gyros';
+import Gyros from '@primajin/gyros';
 
 new Gyros('.gyros-element');
 ```
