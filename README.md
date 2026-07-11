@@ -6,6 +6,12 @@ A JavaScript library for creating shiny effects on HTML elements using gyroscope
 
 ```bash
 npm install @primajin/gyros
+# or
+pnpm add @primajin/gyros
+# or
+yarn add @primajin/gyros
+# or
+bun add @primajin/gyros
 ```
 
 ## Basic Usage
