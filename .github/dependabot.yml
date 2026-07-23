@@ -10,7 +10,7 @@ updates:
     schedule:
       interval: "weekly"
     commit-message:
-      prefix: ":books:"
+      prefix: "deps"
       include: "scope"
     labels:
       - "dependencies"
@@ -23,7 +23,7 @@ updates:
     schedule:
       interval: "weekly"
     commit-message:
-      prefix: ":books:"
+      prefix: "deps"
       include: "scope"
     labels:
       - "dependencies"
