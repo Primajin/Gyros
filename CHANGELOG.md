@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.2](https://github.com/Primajin/Gyros/compare/v1.1.1...v1.1.2) (2026-07-23)
+
+
+### Dependencies
+
+* **actions:** bump the dependencies group across 1 directory with 2 updates ([#46](https://github.com/Primajin/Gyros/issues/46)) ([de5f466](https://github.com/Primajin/Gyros/commit/de5f4665731c803ca4badd881450c659ce63d09c))
+* **deps-dev:** bump the dependencies group across 1 directory with 3 updates ([#44](https://github.com/Primajin/Gyros/issues/44)) ([a564c65](https://github.com/Primajin/Gyros/commit/a564c65e950b68a23614c086bf74fd2a34c7858a))
+
 ## [1.1.1](https://github.com/Primajin/Gyros/compare/v1.1.0...v1.1.1) (2026-07-10)
 
 
