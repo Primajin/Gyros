@@ -19,7 +19,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24'
           cache: 'npm'
@@ -43,7 +43,7 @@ jobs:
       - name: List keys
         run: gpg -K
       - name: Run linter
-        uses: wearerequired/lint-action@v2
+        uses: wearerequired/lint-action@v3
         with:
           auto_fix: true
           xo: true
