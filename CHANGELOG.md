@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/Primajin/Gyros/compare/v1.1.2...v1.1.3) (2026-07-25)
+
+
+### Bug Fixes
+
+* README install alias + automatic release trigger for npm publish ([#48](https://github.com/Primajin/Gyros/issues/48)) ([f4dbaf4](https://github.com/Primajin/Gyros/commit/f4dbaf442e019bbd4cc852a32a1f7461687b15df))
+
 ## [1.1.2](https://github.com/Primajin/Gyros/compare/v1.1.1...v1.1.2) (2026-07-23)
 
 
