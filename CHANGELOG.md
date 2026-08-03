@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/Primajin/Gyros/compare/v1.1.3...v1.1.4) (2026-07-31)
+
+
+### Dependencies
+
+* **deps-dev:** bump the dependencies group with 5 updates ([#50](https://github.com/Primajin/Gyros/issues/50)) ([114e24a](https://github.com/Primajin/Gyros/commit/114e24a5c36d0b9227267bb13c1a75d3c5ea9662))
+
 ## [1.1.3](https://github.com/Primajin/Gyros/compare/v1.1.2...v1.1.3) (2026-07-25)
 
 
