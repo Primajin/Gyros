@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0](https://github.com/Primajin/Gyros/compare/v1.1.4...v1.2.0) (2026-08-13)
+
+
+### Features
+
+* remove separate npm publish workflow — consolidate into release-please ([#52](https://github.com/Primajin/Gyros/issues/52)) ([394bf56](https://github.com/Primajin/Gyros/commit/394bf562051f3eeb23552aead2c92ff004a13eb0))
+
+
+### Dependencies
+
+* **deps-dev:** bump the dependencies group with 4 updates ([#54](https://github.com/Primajin/Gyros/issues/54)) ([862facb](https://github.com/Primajin/Gyros/commit/862facbcf28de92b0cc2b17c59ceb670670dab1c))
+* **deps:** bump Primajin/webapp-console-log-action ([#55](https://github.com/Primajin/Gyros/issues/55)) ([7a75689](https://github.com/Primajin/Gyros/commit/7a7568956a19b118de3501e1b4493c396d97c6a2))
+
 ## [1.1.4](https://github.com/Primajin/Gyros/compare/v1.1.3...v1.1.4) (2026-07-31)
 
 
