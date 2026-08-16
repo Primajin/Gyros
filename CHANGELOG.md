@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.1](https://github.com/Primajin/Gyros/compare/v1.2.0...v1.2.1) (2026-08-16)
+
+
+### Dependencies
+
+* **deps-dev:** bump brace-expansion from 5.0.5 to 5.0.9 ([#61](https://github.com/Primajin/Gyros/issues/61)) ([ba4fa86](https://github.com/Primajin/Gyros/commit/ba4fa8680fc56e335febe4d833d098cfbb2d455e))
+* **deps-dev:** bump globals in the dependencies group ([#58](https://github.com/Primajin/Gyros/issues/58)) ([17be0be](https://github.com/Primajin/Gyros/commit/17be0bedd851a70448c784ca20099558e1cfecfb))
+* **deps-dev:** bump js-yaml from 4.2.0 to 4.3.1 ([#60](https://github.com/Primajin/Gyros/issues/60)) ([aa68bc6](https://github.com/Primajin/Gyros/commit/aa68bc6d4fa36b038826ce592147502d6207bbba))
+
 ## [1.2.0](https://github.com/Primajin/Gyros/compare/v1.1.4...v1.2.0) (2026-08-13)
 
 
