@@ -6,421 +6,64 @@ on:
   pull_request:
     types: [ opened, reopened, synchronize, closed ]
 
-# Least privilege by default; each job widens as needed.
+# Least privilege by default; each caller job grants what its reusable
+# workflow needs. The heavy jobs live in reusable `_*.yml` workflows; this file
+# orchestrates them and aggregates their results into one `All checks green`
+# gate.
 permissions: {}
 
 jobs:
   test:
     if: github.event_name == 'push' || github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    name: Make sure the unit tests pass.
     permissions:
       contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: '24'
-          cache: 'npm'
-      - name: Cache dependencies
-        uses: actions/cache@v6
-        with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: npm-
-      - name: Install dependencies
-        run: npm ci
-      - name: Run coverage
-        run: npm run coverage
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v7
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+    uses: ./.github/workflows/_test.yml
+    secrets: inherit
 
   lint:
     if: github.event_name == 'push' || github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    name: Make sure the code adheres to the coding standard.
     permissions:
       contents: write
       pull-requests: write
       checks: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: '24'
-          cache: 'npm'
-      - name: Cache dependencies
-        uses: actions/cache@v6
-        with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: npm-
-      - name: Install dependencies
-        run: npm ci
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v7
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-          fingerprint: ${{ secrets.GPG_FINGERPRINT }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
-          git_config_global: true
-      - name: List keys
-        run: gpg -K
-      - name: Run linter
-        uses: wearerequired/lint-action@v3
-        with:
-          auto_fix: true
-          xo: true
-          xo_args: "--config eslint.config.js"
-          commit_message: ":sparkles: fix code style issues with ${linter}"
-          git_email: Primajin@users.noreply.github.com
+    uses: ./.github/workflows/_lint.yml
+    secrets: inherit
 
-  sync-pr-title-with-commits:
+  pr-title:
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
-    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-    name: Promote PR title bump level to match highest commit bump level
-    steps:
-      - uses: actions/github-script@v9
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const PR_NUMBER = context.payload.pull_request.number;
-            const { owner, repo } = context.repo;
-
-            const isFork = context.payload.pull_request.head.repo.full_name !== context.payload.pull_request.base.repo.full_name;
-            if (isFork) {
-              core.info('PR is from a fork; skipping PR title sync because GITHUB_TOKEN cannot update fork PR titles.');
-              return;
-            }
-            const PATCH = 0;
-            const MINOR = 1;
-            const MAJOR = 2;
-
-            const MINOR_TYPES = new Set(['feat']);
-
-            function bumpLevelFromMessage(message) {
-              const lines = message.split('\n');
-              const firstLine = lines[0];
-
-              if (/^[a-z]+(?:\([^)]+\))?!:/i.test(firstLine)) return MAJOR;
-
-              if (lines.some(line => /^BREAKING[ -]CHANGE:/i.test(line.trim()))) return MAJOR;
-
-              const match = firstLine.match(/^([a-z]+)(?:\([^)]+\))?:/i);
-
-              if (match && MINOR_TYPES.has(match[1].toLowerCase())) return MINOR;
-
-              return PATCH;
-            }
-
-            const commits = await github.paginate(github.rest.pulls.listCommits, {
-              owner,
-              repo,
-              pull_number: PR_NUMBER,
-            });
-
-            let maxBump = PATCH;
-
-            for (const { commit } of commits) {
-              const bump = bumpLevelFromMessage(commit.message);
-
-              if (bump > maxBump) maxBump = bump;
-              if (maxBump === MAJOR) break;
-            }
-
-            const currentTitle = context.payload.pull_request.title;
-            const titleMatch = currentTitle.match(/^([a-z]+)(\([^)]+\))?(!)?: (.+)$/i);
-
-            if (!titleMatch) {
-              core.warning(`PR title "${currentTitle}" does not follow Conventional Commits format — skipping sync`);
-              return;
-            }
-
-            const [, type, scope, bang, subject] = titleMatch;
-            const scopePart = scope || '';
-            const currentBump = bang ? MAJOR : (MINOR_TYPES.has(type.toLowerCase()) ? MINOR : PATCH);
-
-            if (maxBump <= currentBump) {
-              core.info(`No title update needed (title bump: ${currentBump}, max commit bump: ${maxBump})`);
-              return;
-            }
-
-            const newType = maxBump === MINOR ? 'feat' : type;
-            const newBang = maxBump >= MAJOR ? '!' : '';
-
-            const newTitle = `${newType}${scopePart}${newBang}: ${subject}`;
-
-            core.notice(`Updating PR title from "${currentTitle}" to "${newTitle}"`);
-
-            await github.rest.pulls.update({
-              owner,
-              repo,
-              pull_number: PR_NUMBER,
-              title: newTitle,
-            });
-
-  lint-pr-title:
-    if: always() && github.event_name == 'pull_request' && github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    needs: sync-pr-title-with-commits
-    permissions:
-      pull-requests: read
-    name: Validate PR title follows Conventional Commits
-    steps:
-      - uses: amannn/action-semantic-pull-request@v6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          types: |
-            feat
-            fix
-            docs
-            style
-            refactor
-            perf
-            test
-            build
-            ci
-            chore
-            revert
-            deps
-          requireScope: false
+    uses: ./.github/workflows/_pr-title.yml
+    secrets: inherit
 
   deploy-preview:
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    name: Make sure it builds. Then show a preview.
-    # Serialise gh-pages writes with the push-to-main deploy (deploy.yml shares
-    # this group). Scoped to this job so the rest of CI is not pulled into the
-    # group and cancelled on push-to-main.
-    concurrency:
-      group: gh-pages
-      cancel-in-progress: false
     permissions:
       actions: write
       contents: write
       pull-requests: write
-    environment:
-      name: pr-preview/pr-${{ github.event.number }}
-      url: ${{ format('https://{0}.github.io/{1}/pr-preview/pr-{2}/', github.repository_owner, github.event.repository.name, github.event.number) }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: '24'
-          cache: 'npm'
-
-      - name: Install and Build
-        if: github.event.action != 'closed'
-        run: |
-          npm ci
-          npm run build:preview
-        env:
-          VITE_BASE_PATH: /Gyros/pr-preview/pr-${{ github.event.number }}/
-
-      - name: Deploy preview
-        uses: rossjrw/pr-preview-action@v1
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        with:
-          source-dir: ./dist/
-      - name: Capture deployed Pages SHA
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        run: echo "EXPECTED_PAGES_SHA=$(git ls-remote origin refs/heads/gh-pages | cut -f1)" >> "$GITHUB_ENV"
-      - name: Wait for Pages deployment
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          python3 - <<'PY'
-          import json
-          import os
-          import sys
-          import time
-          import urllib.request
-
-          expected_sha = os.environ['EXPECTED_PAGES_SHA'].strip()
-          repository = os.environ['GITHUB_REPOSITORY']
-          token = os.environ['GITHUB_TOKEN']
-          deadline = time.time() + 15 * 60
-          retries_done = 0
-          max_reruns = 2
-          last_retried_attempt = 0
-
-          if not expected_sha:
-              raise SystemExit('EXPECTED_PAGES_SHA is empty')
-
-          def request(method, url, *, expect_json=True):
-              req = urllib.request.Request(
-                  url,
-                  method=method,
-                  headers={
-                      'Authorization': 'Bearer ' + token,
-                      'Accept': 'application/vnd.github+json',
-                      'X-GitHub-Api-Version': '2022-11-28',
-                  },
-              )
-              with urllib.request.urlopen(req, timeout=15) as response:
-                  if not expect_json:
-                      return None
-                  body = response.read()
-                  return json.loads(body or '{}')
-
-          while time.time() < deadline:
-              data = request(
-                  'GET',
-                  f'https://api.github.com/repos/{repository}/actions/runs?branch=gh-pages&event=dynamic&per_page=50',
-              )
-              runs = [
-                  run for run in data.get('workflow_runs', [])
-                  if run.get('path') == 'dynamic/pages/pages-build-deployment'
-                  and run.get('head_sha') == expected_sha
-              ]
-              runs.sort(key=lambda run: (run.get('run_attempt', 0), run.get('created_at', '')), reverse=True)
-
-              if not runs:
-                  print(f'Waiting for Pages workflow for {expected_sha}...')
-                  time.sleep(10)
-                  continue
-
-              run = runs[0]
-              status = run.get('status')
-              conclusion = run.get('conclusion')
-              attempt = run.get('run_attempt', 1)
-              run_id = run['id']
-              print(f"Pages run {run_id} attempt {attempt}: status={status} conclusion={conclusion}")
-
-              if status != 'completed':
-                  time.sleep(10)
-                  continue
-
-              if conclusion == 'success':
-                  sys.exit(0)
-
-              if retries_done < max_reruns and attempt > last_retried_attempt:
-                  print(f'Re-running failed Pages workflow run {run_id}...')
-                  request(
-                      'POST',
-                      f'https://api.github.com/repos/{repository}/actions/runs/{run_id}/rerun',
-                      expect_json=False,
-                  )
-                  retries_done += 1
-                  last_retried_attempt = attempt
-                  time.sleep(10)
-                  continue
-
-              raise SystemExit(
-                  f"Pages deployment failed for {expected_sha}: "
-                  f"{run.get('html_url')}"
-              )
-
-          raise SystemExit(f'Timed out waiting for Pages deployment for {expected_sha}')
-          PY
+    uses: ./.github/workflows/_preview.yml
+    secrets: inherit
 
   console:
     if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
     needs: deploy-preview
-    runs-on: ubuntu-latest
-    name: Get console logs
     permissions:
       checks: read
       contents: read
       pull-requests: write
-    env:
-      PREVIEW_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr-preview/pr-${{ github.event.number }}/
-    steps:
-      - name: Wait for preview URL to be available
-        shell: bash
-        run: |
-          echo "Polling ${PREVIEW_URL} ..."
-          timeout=180
-          elapsed=0
-          until [ "$elapsed" -ge "$timeout" ]; do
-            status=$(curl --silent --output /dev/null --write-out "%{http_code}" "${PREVIEW_URL}" || true)
-            if [[ "$status" =~ ^2 ]]; then
-              echo "Preview is live (HTTP ${status})"
-              exit 0
-            fi
-            echo "HTTP ${status} – retrying in 5 s (${elapsed}/${timeout}s elapsed)"
-            sleep 5
-            elapsed=$((elapsed + 5))
-          done
-          echo "Timed out waiting for preview after ${timeout}s"
-          exit 1
-      - name: Checkout code
-        uses: actions/checkout@v7
-      - name: Use WebApp Console Log Action
-        uses: Primajin/webapp-console-log-action@v1.8.2
-        with:
-          webapp-url: ${{ env.PREVIEW_URL }}
-          regexp-error: 'Failed \D+ 404 \(\)'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    uses: ./.github/workflows/_console.yml
+    secrets: inherit
 
   screenshots:
     if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
     needs: deploy-preview
-    runs-on: ubuntu-latest
-    name: Take a screenshot after page was built
     permissions:
       checks: read
       contents: write
       pull-requests: write
-    env:
-      PREVIEW_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr-preview/pr-${{ github.event.number }}/
-    steps:
-      - name: Wait for preview URL to be available
-        shell: bash
-        run: |
-          echo "Polling ${PREVIEW_URL} ..."
-          timeout=180
-          elapsed=0
-          until [ "$elapsed" -ge "$timeout" ]; do
-            status=$(curl --silent --output /dev/null --write-out "%{http_code}" "${PREVIEW_URL}" || true)
-            if [[ "$status" =~ ^2 ]]; then
-              echo "Preview is live (HTTP ${status})"
-              exit 0
-            fi
-            echo "HTTP ${status} – retrying in 5 s (${elapsed}/${timeout}s elapsed)"
-            sleep 5
-            elapsed=$((elapsed + 5))
-          done
-          echo "Timed out waiting for preview after ${timeout}s"
-          exit 1
-      - name: Checkout code
-        uses: actions/checkout@v7
-      - name: screenshots-ci-action
-        uses: Primajin/screenshots-ci-action@v3
-        with:
-          devices: iPhone 13,iPad Pro,iPad Pro landscape
-          fullPage: false
-          noDesktop: true
-          releaseId: 315671617
-          type: png
-          url: ${{ env.PREVIEW_URL }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/upload-artifact@v7
-        with:
-          path: screenshots
-          name: Download-screenshots
+    uses: ./.github/workflows/_screenshots.yml
+    secrets: inherit
 
   all-green:
     name: All checks green
@@ -428,8 +71,7 @@ jobs:
     needs:
       - test
       - lint
-      - sync-pr-title-with-commits
-      - lint-pr-title
+      - pr-title
       - deploy-preview
       - console
       - screenshots
