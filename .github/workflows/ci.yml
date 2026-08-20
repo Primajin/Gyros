@@ -6,12 +6,6 @@ on:
   pull_request:
     types: [ opened, reopened, synchronize, closed ]
 
-# Serialise every gh-pages write (the PR preview deploy here, and the
-# push-to-main deploy in deploy.yml) so they cannot race on the gh-pages branch.
-concurrency:
-  group: gh-pages
-  cancel-in-progress: false
-
 # Least privilege by default; each job widens as needed.
 permissions: {}
 
@@ -211,6 +205,12 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     name: Make sure it builds. Then show a preview.
+    # Serialise gh-pages writes with the push-to-main deploy (deploy.yml shares
+    # this group). Scoped to this job so the rest of CI is not pulled into the
+    # group and cancelled on push-to-main.
+    concurrency:
+      group: gh-pages
+      cancel-in-progress: false
     permissions:
       actions: write
       contents: write
@@ -335,7 +335,7 @@ jobs:
           PY
 
   console:
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
     needs: deploy-preview
     runs-on: ubuntu-latest
     name: Get console logs
@@ -375,7 +375,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   screenshots:
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
     needs: deploy-preview
     runs-on: ubuntu-latest
     name: Take a screenshot after page was built
@@ -406,10 +406,6 @@ jobs:
           exit 1
       - name: Checkout code
         uses: actions/checkout@v7
-      - name: install puppeteer-headful
-        uses: mujo-code/puppeteer-headful@master
-        env:
-          CI: 'true'
       - name: screenshots-ci-action
         uses: Primajin/screenshots-ci-action@v3
         with:
