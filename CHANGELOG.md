@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.3](https://github.com/Primajin/Gyros/compare/v1.2.2...v1.2.3) (2026-08-29)
+
+
+### Dependencies
+
+* **deps-dev:** bump the dependencies group with 2 updates ([#68](https://github.com/Primajin/Gyros/issues/68)) ([2c7f2c6](https://github.com/Primajin/Gyros/commit/2c7f2c63d457032630b11fb6401060430a848d02))
+* **deps:** bump Primajin/webapp-console-log-action ([#69](https://github.com/Primajin/Gyros/issues/69)) ([f3b6111](https://github.com/Primajin/Gyros/commit/f3b6111f0d80951a1b5842b0debdb1816d6279a7))
+
 ## [1.2.2](https://github.com/Primajin/Gyros/compare/v1.2.1...v1.2.2) (2026-08-22)
 
 
