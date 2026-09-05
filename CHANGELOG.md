@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.4](https://github.com/Primajin/Gyros/compare/v1.2.3...v1.2.4) (2026-09-05)
+
+
+### Dependencies
+
+* **deps-dev:** bump browserslist from 4.28.5 to 4.28.9 ([#73](https://github.com/Primajin/Gyros/issues/73)) ([6aca205](https://github.com/Primajin/Gyros/commit/6aca205cb36aa83b4099b67de17a0f82d0c92e3f))
+* **deps-dev:** bump globals in the dependencies group ([#71](https://github.com/Primajin/Gyros/issues/71)) ([1c37186](https://github.com/Primajin/Gyros/commit/1c371865e97911d2d61551b863aab06ae2a3a742))
+
 ## [1.2.3](https://github.com/Primajin/Gyros/compare/v1.2.2...v1.2.3) (2026-08-29)
 
 
