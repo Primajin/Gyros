@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.5](https://github.com/Primajin/Gyros/compare/v1.2.4...v1.2.5) (2026-09-12)
+
+
+### Dependencies
+
+* **deps-dev:** bump the dependencies group with 3 updates ([#74](https://github.com/Primajin/Gyros/issues/74)) ([7264ac2](https://github.com/Primajin/Gyros/commit/7264ac2200dd9f33cb3414ec7b12af338dd8a33b))
+
 ## [1.2.4](https://github.com/Primajin/Gyros/compare/v1.2.3...v1.2.4) (2026-09-05)
 
 
