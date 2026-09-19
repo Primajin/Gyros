@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.5](https://github.com/Primajin/Gyros/compare/v1.2.4...v1.2.5) (2026-09-19)
+
+
+### Dependencies
+
+* **deps-dev:** bump js-yaml from 4.3.1 to 4.3.2 ([#78](https://github.com/Primajin/Gyros/issues/78)) ([3895045](https://github.com/Primajin/Gyros/commit/38950459815582a5199f209a06d65797c5838f90))
+* **deps-dev:** bump the dependencies group with 3 updates ([#74](https://github.com/Primajin/Gyros/issues/74)) ([7264ac2](https://github.com/Primajin/Gyros/commit/7264ac2200dd9f33cb3414ec7b12af338dd8a33b))
+* **deps-dev:** bump the dependencies group with 3 updates ([#76](https://github.com/Primajin/Gyros/issues/76)) ([5359bbe](https://github.com/Primajin/Gyros/commit/5359bbe76c01910d3e3ce922b0379d684e746f04))
+* **deps:** bump Primajin/webapp-console-log-action from 1.8.3 to 1.8.5 in the dependencies group across 1 directory ([#77](https://github.com/Primajin/Gyros/issues/77)) ([70fa59f](https://github.com/Primajin/Gyros/commit/70fa59f503133db427010988bf85c7fc190c250f))
+
 ## [1.2.4](https://github.com/Primajin/Gyros/compare/v1.2.3...v1.2.4) (2026-09-05)
 
 
