@@ -2,7 +2,9 @@ import vitest from '@vitest/eslint-plugin';
 import globals from 'globals';
 import {globalIgnores} from 'eslint/config';
 
-/** @type {import('xo').FlatXoConfig} */
+/**
+@type {import('xo').FlatXoConfig}
+*/
 const xoConfig = [
 	globalIgnores([
 		'package-lock.json',

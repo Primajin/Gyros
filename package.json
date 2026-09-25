@@ -2,16 +2,28 @@
   "name": "@primajin/gyros",
   "version": "1.2.5",
   "description": "A JavaScript library for creating shiny effects on HTML elements using gyroscope or mouse movement.",
-  "main": "dist/gyros.umd.cjs",
-  "module": "dist/gyros.es.js",
+  "license": "ISC",
+  "repository": "github:Primajin/Gyros",
+  "homepage": "https://github.com/Primajin/Gyros#readme",
+  "bugs": "https://github.com/Primajin/Gyros/issues",
+  "author": "Jannis Hell",
+  "type": "module",
   "exports": {
     "import": "./dist/gyros.es.js",
-    "require": "./dist/gyros.umd.cjs"
+    "require": "./dist/gyros.umd.cjs",
+    "default": "./dist/gyros.es.js"
   },
-  "type": "module",
-  "files": [
-    "dist"
-  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=22.22.2",
+      "onFail": "warn"
+    }
+  },
   "scripts": {
     "build": "vite build --config vite.config.lib.js",
     "build:preview": "vite build",
@@ -22,10 +34,9 @@
     "start": "vite",
     "test": "vitest run"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Primajin/Gyros.git"
-  },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "shiny",
     "effect",
@@ -33,23 +44,17 @@
     "gyroscope",
     "interactive"
   ],
-  "author": {
-    "name": "Jannis Hell"
-  },
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Primajin/Gyros/issues"
-  },
-  "homepage": "https://github.com/Primajin/Gyros#readme",
   "devDependencies": {
     "@vitest/coverage-v8": "^5.0.0",
     "@vitest/eslint-plugin": "^1.6.22",
-    "eslint": "^10.6.0",
+    "eslint": "^10.11.0",
     "globals": "^17.7.0",
     "jsdom": "^30.0.1",
     "nodemon": "^3.1.14",
     "vite": "^8.1.4",
     "vitest": "^5.0.0",
-    "xo": "^4.0.0"
-  }
+    "xo": "^5.0.1"
+  },
+  "unpkg": "./dist/gyros.umd.cjs",
+  "jsdelivr": "./dist/gyros.umd.cjs"
 }
