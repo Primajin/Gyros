@@ -15,7 +15,14 @@
   },
   "sideEffects": false,
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=18"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=22.22.2",
+      "onFail": "warn"
+    }
   },
   "scripts": {
     "build": "vite build --config vite.config.lib.js",
@@ -47,5 +54,7 @@
     "vite": "^8.1.4",
     "vitest": "^5.0.0",
     "xo": "^5.0.1"
-  }
+  },
+  "unpkg": "./dist/gyros.umd.cjs",
+  "jsdelivr": "./dist/gyros.umd.cjs"
 }
