@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.6](https://github.com/Primajin/Gyros/compare/v1.2.5...v1.2.6) (2026-09-26)
+
+
+### Dependencies
+
+* **deps-dev:** bump jsdom in the dependencies group ([#80](https://github.com/Primajin/Gyros/issues/80)) ([5d487c1](https://github.com/Primajin/Gyros/commit/5d487c178651fffa7cdf837abc23cd2b0393dcbf))
+
 ## [1.2.5](https://github.com/Primajin/Gyros/compare/v1.2.4...v1.2.5) (2026-09-19)
 
 
