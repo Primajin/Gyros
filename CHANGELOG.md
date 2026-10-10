@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.7](https://github.com/Primajin/Gyros/compare/v1.2.6...v1.2.7) (2026-10-10)
+
+
+### Dependencies
+
+* lock file maintenance ([#89](https://github.com/Primajin/Gyros/issues/89)) ([3b497db](https://github.com/Primajin/Gyros/commit/3b497dba1cf1fe7164f763d2e3527db6f65ceaf8))
+
 ## [1.2.6](https://github.com/Primajin/Gyros/compare/v1.2.5...v1.2.6) (2026-09-26)
 
 
