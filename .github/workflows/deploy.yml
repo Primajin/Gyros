@@ -48,7 +48,6 @@ jobs:
         with:
           folder: dist
           clean-exclude: pr-preview
-          retry_on_conflict: true
       - name: Capture deployed Pages SHA
         run: echo "EXPECTED_PAGES_SHA=$(git ls-remote origin refs/heads/gh-pages | cut -f1)" >> "$GITHUB_ENV"
       - name: Wait for Pages deployment
