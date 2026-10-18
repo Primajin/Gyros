@@ -35,12 +35,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
       - name: screenshots-ci-action
-        uses: Primajin/screenshots-ci-action@v3
+        uses: Primajin/screenshots-ci-action@v4
         with:
-          devices: iPhone 13,iPad Pro,iPad Pro landscape
-          fullPage: false
-          noDesktop: true
-          releaseId: 315671617
+          devices: iPhone 13,iPad Pro 11,iPad Pro 11 landscape
+          full-page: false
+          no-desktop: true
+          release-id: 315671617
           type: png
           url: ${{ env.PREVIEW_URL }}
         env:
