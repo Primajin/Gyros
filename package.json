@@ -55,6 +55,9 @@
     "vitest": "^5.0.0",
     "xo": "^5.0.1"
   },
+  "overrides": {
+    "katex": "^0.18.2"
+  },
   "unpkg": "./dist/gyros.umd.cjs",
   "jsdelivr": "./dist/gyros.umd.cjs"
 }
