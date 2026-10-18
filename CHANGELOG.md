@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.9](https://github.com/Primajin/Gyros/compare/v1.2.8...v1.2.9) (2026-10-18)
+
+
+### Dependencies
+
+* update @vitest/coverage-v8, Primajin/webapp-console-log-action, eslint, jsdom, vitest ([79614af](https://github.com/Primajin/Gyros/commit/79614af10343bfd0c77625d4912041f24518dcd7))
+* update katex ([c29ba00](https://github.com/Primajin/Gyros/commit/c29ba0048286a50f88abe6d22c7d3aab77cdbeb6))
+
 ## [1.2.8](https://github.com/Primajin/Gyros/compare/v1.2.7...v1.2.8) (2026-10-12)
 
 
