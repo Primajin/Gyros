@@ -34,7 +34,7 @@ You can pass an options object as the second argument to the `Gyros` constructor
 |-------------|----------|---------------------------------------|----------------------------------------------------------------------------------------------------------|
 | `material`  | `string` or `object` | `'gold'`                              | The material to use for the shiny effect. Can be a predefined material name or a custom material object. |
 | `shininess` | `string` | `'polished'`                          | The shininess level to use. Can be `'polished'` or `'matte'`.                                             |
-| `fallback`  | `array`  | `['gyroscope', 'mouse', 'static']`    | The order of fallback mechanisms to use.                                                                 |
+| `fallback`  | `array`  | `['gyroscope', 'mouse', 'static']`    | The order of fallback mechanisms to use. The static gradient is always applied first, even if `'static'` is omitted, and is then replaced by gyroscope or mouse updates. |
 | `sensitivity` | `number` | `50`                                  | The update frequency of the effect, in milliseconds. A lower number means more frequent updates.         |
 
 ### Custom Materials

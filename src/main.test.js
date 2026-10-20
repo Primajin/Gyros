@@ -3,6 +3,7 @@ import {
 	it,
 	expect,
 	beforeEach,
+	afterEach,
 	vi,
 } from 'vitest';
 
@@ -102,5 +103,132 @@ describe('Gyros', () => {
 		gyros.handleOrientation({beta: 45, gamma: 30});
 
 		expect(spy).toHaveBeenCalledWith(45, 30);
+	});
+
+	describe('static fallback', () => {
+		// Browsers normalise style values, so compare against what the same value looks like once set
+		const normalise = gradient => {
+			const probe = document.createElement('div');
+			probe.style.backgroundImage = gradient;
+			return probe.style.backgroundImage;
+		};
+
+		const settle = async () => new Promise(resolve => {
+			setTimeout(resolve, 0);
+		});
+
+		const getBackground = () => document.querySelector('.gyros-element').style.backgroundImage;
+
+		afterEach(() => {
+			vi.unstubAllGlobals();
+			vi.restoreAllMocks();
+		});
+
+		it('should apply the static gradient immediately with default options', () => {
+			const gyros = new Gyros('.gyros-element');
+
+			expect(getBackground()).not.toBe('');
+			expect(getBackground()).toBe(normalise(gyros.getGradient()));
+		});
+
+		it('should apply the static gradient to every matching element', () => {
+			document.body.innerHTML = '<div class="gyros-element"></div><div class="gyros-element"></div>';
+			const gyros = new Gyros('.gyros-element');
+
+			for (const element of document.querySelectorAll('.gyros-element')) {
+				expect(element.style.backgroundImage).toBe(normalise(gyros.getGradient()));
+			}
+		});
+
+		it('should apply the static gradient even if static is not in the fallback list', () => {
+			const gyros = new Gyros('.gyros-element', {fallback: []});
+
+			expect(getBackground()).toBe(normalise(gyros.getGradient()));
+		});
+
+		it('should apply the static gradient when DeviceOrientationEvent exists without requestPermission', async () => {
+			vi.stubGlobal('DeviceOrientationEvent', class {});
+			const gyros = new Gyros('.gyros-element');
+
+			expect(getBackground()).toBe(normalise(gyros.getGradient()));
+			await settle();
+			expect(getBackground()).toBe(normalise(gyros.getGradient()));
+		});
+
+		it('should apply the static gradient before requestPermission resolves', async () => {
+			const {promise, resolve: resolvePermission} = Promise.withResolvers();
+			vi.stubGlobal('DeviceOrientationEvent', {requestPermission: async () => promise});
+			const gyros = new Gyros('.gyros-element');
+
+			expect(getBackground()).toBe(normalise(gyros.getGradient()));
+
+			resolvePermission('granted');
+			await settle();
+			expect(getBackground()).toBe(normalise(gyros.getGradient()));
+		});
+
+		it('should keep the static gradient when permission is denied', async () => {
+			vi.stubGlobal('DeviceOrientationEvent', {requestPermission: async () => 'denied'});
+			const gyros = new Gyros('.gyros-element');
+
+			expect(getBackground()).toBe(normalise(gyros.getGradient()));
+			await settle();
+			expect(getBackground()).toBe(normalise(gyros.getGradient()));
+		});
+
+		it('should keep the static gradient when requesting permission throws', async () => {
+			vi.spyOn(console, 'error').mockImplementation(() => {});
+			vi.stubGlobal('DeviceOrientationEvent', {
+				requestPermission() {
+					throw new Error('NotAllowedError');
+				},
+			});
+			const gyros = new Gyros('.gyros-element');
+
+			expect(getBackground()).toBe(normalise(gyros.getGradient()));
+			await settle();
+			expect(getBackground()).toBe(normalise(gyros.getGradient()));
+			expect(console.error).toHaveBeenCalledOnce();
+		});
+
+		it('should replace the static gradient after a mousemove event', async () => {
+			// JSDOM ships DeviceOrientationEvent, which would take the gyroscope path instead
+			vi.stubGlobal('DeviceOrientationEvent', undefined);
+			const gyros = new Gyros('.gyros-element');
+			await settle();
+			const staticGradient = getBackground();
+
+			dispatchEvent(new MouseEvent('mousemove', {clientX: 10, clientY: 10}));
+
+			expect(getBackground()).not.toBe('');
+			expect(getBackground()).not.toBe(staticGradient);
+			expect(getBackground()).toBe(normalise(gyros.getGradient(
+				((10 / innerHeight) * 180) - 90,
+				((10 / innerWidth) * 180) - 90,
+			)));
+		});
+
+		it('should replace the static gradient after a deviceorientation event', async () => {
+			vi.stubGlobal('DeviceOrientationEvent', class {});
+			const gyros = new Gyros('.gyros-element');
+			await settle();
+			const staticGradient = getBackground();
+
+			const event = new Event('deviceorientation');
+			event.beta = 10;
+			event.gamma = 20;
+			dispatchEvent(event);
+
+			expect(getBackground()).not.toBe(staticGradient);
+			expect(getBackground()).toBe(normalise(gyros.getGradient(10, 20)));
+		});
+
+		it('should not throw when no elements match', async () => {
+			expect(() => new Gyros('.does-not-exist')).not.toThrow();
+
+			const gyros = new Gyros('.does-not-exist');
+			await settle();
+			expect(gyros.elements.length).toBe(0);
+		});
 	});
 });
