@@ -21,6 +21,7 @@ export default class Gyros {
 		const defaultOptions = {
 			material: 'gold',
 			shininess: 'polished',
+			// The static gradient is always painted first, whether or not 'static' is listed
 			fallback: ['gyroscope', 'mouse', 'static'],
 			sensitivity: 50, // 0-100, lower is more frequent
 		};
@@ -28,8 +29,19 @@ export default class Gyros {
 		return {...defaultOptions, ...options};
 	}
 
+	applyStaticGradient() {
+		for (const element of this.elements) {
+			const gradient = this.getGradient();
+			element.style.backgroundImage = gradient;
+		}
+	}
+
 	async applyEffect() {
 		let isGyroscopeUsed = false;
+
+		// Always paint the static gradient up front so elements are never left unstyled,
+		// even before the first sensor/mouse event or if permission is denied; events then replace it
+		this.applyStaticGradient();
 
 		if (globalThis.DeviceOrientationEvent && this.options.fallback.includes('gyroscope')) {
 			if (typeof globalThis.DeviceOrientationEvent.requestPermission === 'function') {
@@ -50,11 +62,6 @@ export default class Gyros {
 
 		if (!isGyroscopeUsed && this.options.fallback.includes('mouse')) {
 			globalThis.addEventListener('mousemove', this.handleMouseMove.bind(this));
-		} else if (!isGyroscopeUsed) {
-			for (const element of this.elements) {
-				const gradient = this.getGradient();
-				element.style.backgroundImage = gradient;
-			}
 		}
 	}
 
