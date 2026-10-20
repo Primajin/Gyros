@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.10](https://github.com/Primajin/Gyros/compare/v1.2.9...v1.2.10) (2026-10-20)
+
+
+### Bug Fixes
+
+* always apply the static gradient on init ([#107](https://github.com/Primajin/Gyros/issues/107)) ([820fd82](https://github.com/Primajin/Gyros/commit/820fd823e7ba14ef9c698b200bf7145e44194723))
+
+
+### Dependencies
+
+* update Primajin/webapp-console-log-action ([362644d](https://github.com/Primajin/Gyros/commit/362644d91d0c278c5e1e6acf31dd262855912c1f))
+
 ## [1.2.9](https://github.com/Primajin/Gyros/compare/v1.2.8...v1.2.9) (2026-10-18)
 
 
